@@ -144,19 +144,25 @@ ros2 topic echo /mission_report
 
 ### Step 4: Send a custom delivery order
 ```bash
+ros2 service call /global_costmap/clear_entirely_global_costmap nav2_msgs/srv/ClearEntireCostmap {}
+
+pes2ug23cs337@pes2ug23cs337:~/delivery_robot_ws$ ros2 service call /local_costmap/clear_entirely_local_costmap nav2_msgs/srv/ClearEntireCostmap {}
+
+pes2ug23cs337@pes2ug23cs337:~/delivery_robot_ws$ ros2 topic pub --once /initialpose geometry_msgs/msg/PoseWithCovarianceStamped "{
+  header: {frame_id: 'map'},
+  pose: {pose: {position: {x: 0.0, y: 0.0, z: 0.0},
+  orientation: {x: 0.0, y: 0.0, z: 0.0, w: 1.0}},
+  covariance: [0.25, 0, 0, 0, 0, 0, 0, 0.25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.06853]}
+}"
+
+ros2 topic pub --once /robot_status std_msgs/String "{data: 'IDLE'}"
+
 # Single station
-ros2 topic pub --once /delivery_order std_msgs/String "data: 'station_A'"
+ros2 topic pub --once /delivery_order std_msgs/String "{data: 'station_A'}" 
 
 # Multi-stop route
-ros2 topic pub --once /delivery_order std_msgs/String "data: 'station_B,station_C,home'"
+ros2 topic pub --once /delivery_order std_msgs/String "data: 'station_A,station_B,station_C,home'"
 ```
-
-### Step 5: Send a JSON mission
-```bash
-ros2 topic pub --once /new_mission std_msgs/String \
-  "data: '{\"mission_id\": \"M001\", \"destinations\": [\"station_A\", \"station_C\", \"home\"], \"priority\": 2}'"
-```
-
 ---
 
 ## 🗺️ Delivery Stations
